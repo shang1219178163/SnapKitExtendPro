@@ -1,9 +1,9 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SnapKitExtendPro'
-  s.version          = '1.0.1'
-  s.summary          = 'A short description of SnapKitExtendPro.'
-  s.description      = 'TODO: Add long description of the pod here.'
+  s.version          = '1.0.2'
+  s.summary          = 'base in SnapKitExtend.'
+  s.description      = 'SnapKitExtend Update Version'
 
   s.homepage         = 'https://github.com/shang1219178163/SnapKitExtendPro'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
