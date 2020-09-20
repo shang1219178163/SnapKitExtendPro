@@ -11,6 +11,10 @@
 		146050ED23A3210200C10F34 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 146050EF23A3210200C10F34 /* InfoPlist.strings */; };
 		146050F323A3212300C10F34 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 146050F523A3212300C10F34 /* Localizable.strings */; };
 		146050FB23A3228E00C10F34 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 146050F923A3228E00C10F34 /* LaunchScreen.xib */; };
+		14A3CB5B25170E7000EBF764 /* UITableViewCellSudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3CB5925170E7000EBF764 /* UITableViewCellSudokuView.swift */; };
+		14A3CB5C25170E7000EBF764 /* UITableViewCellSudokuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3CB5A25170E7000EBF764 /* UITableViewCellSudokuButton.swift */; };
+		14A3CB5E25170F3800EBF764 /* NNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3CB5D25170F3800EBF764 /* NNButton.swift */; };
+		14A3CB60251715BC00EBF764 /* UITableViewCellSudokuButtonReverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3CB5F251715BC00EBF764 /* UITableViewCellSudokuButtonReverse.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* HomeViewController.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -38,7 +42,11 @@
 		146050F423A3212300C10F34 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		146050F623A3212500C10F34 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		146050FA23A3228E00C10F34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		35777892192D19516D6EE08C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		14A3CB5925170E7000EBF764 /* UITableViewCellSudokuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewCellSudokuView.swift; sourceTree = "<group>"; };
+		14A3CB5A25170E7000EBF764 /* UITableViewCellSudokuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewCellSudokuButton.swift; sourceTree = "<group>"; };
+		14A3CB5D25170F3800EBF764 /* NNButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NNButton.swift; sourceTree = "<group>"; };
+		14A3CB5F251715BC00EBF764 /* UITableViewCellSudokuButtonReverse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCellSudokuButtonReverse.swift; sourceTree = "<group>"; };
+		35777892192D19516D6EE08C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		435CCE356245BAB02D4EBFB5 /* Pods_SnapKitExtendPro_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnapKitExtendPro_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D4712A40223AF95C3021EE0 /* Pods-SnapKitExtendPro_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapKitExtendPro_Example.release.xcconfig"; path = "Target Support Files/Pods-SnapKitExtendPro_Example/Pods-SnapKitExtendPro_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* SnapKitExtendPro_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapKitExtendPro_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,8 +58,8 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		8329B628547C75DDA96AD332 /* Pods-SnapKitExtendPro_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapKitExtendPro_Tests.release.xcconfig"; path = "Target Support Files/Pods-SnapKitExtendPro_Tests/Pods-SnapKitExtendPro_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		8F25A2FDA8EF2C536F9F05FA /* SnapKitExtendPro.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = SnapKitExtendPro.podspec; path = ../SnapKitExtendPro.podspec; sourceTree = "<group>"; };
-		B2601E456C35C8D6D83DAD86 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		8F25A2FDA8EF2C536F9F05FA /* SnapKitExtendPro.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SnapKitExtendPro.podspec; path = ../SnapKitExtendPro.podspec; sourceTree = "<group>"; };
+		B2601E456C35C8D6D83DAD86 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		C0BD15AC60744D07C9618382 /* Pods-SnapKitExtendPro_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapKitExtendPro_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SnapKitExtendPro_Tests/Pods-SnapKitExtendPro_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DCA232484073D5748BB099D9 /* Pods-SnapKitExtendPro_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapKitExtendPro_Example.debug.xcconfig"; path = "Target Support Files/Pods-SnapKitExtendPro_Example/Pods-SnapKitExtendPro_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,6 +84,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14A3CB5825170E7000EBF764 /* UITableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				14A3CB5925170E7000EBF764 /* UITableViewCellSudokuView.swift */,
+				14A3CB5A25170E7000EBF764 /* UITableViewCellSudokuButton.swift */,
+				14A3CB5F251715BC00EBF764 /* UITableViewCellSudokuButtonReverse.swift */,
+			);
+			path = UITableViewCell;
+			sourceTree = "<group>";
+		};
 		5757863DE9F95FDFD3F5B24D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -84,7 +102,6 @@
 				C0BD15AC60744D07C9618382 /* Pods-SnapKitExtendPro_Tests.debug.xcconfig */,
 				8329B628547C75DDA96AD332 /* Pods-SnapKitExtendPro_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -113,6 +130,8 @@
 		607FACD21AFB9204008FA782 /* Example for SnapKitExtendPro */ = {
 			isa = PBXGroup;
 			children = (
+				14A3CB5D25170F3800EBF764 /* NNButton.swift */,
+				14A3CB5825170E7000EBF764 /* UITableViewCell */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* HomeViewController.swift */,
 				146050E923A31FAD00C10F34 /* NSObject+Helper.swift */,
@@ -362,7 +381,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* HomeViewController.swift in Sources */,
+				14A3CB5E25170F3800EBF764 /* NNButton.swift in Sources */,
+				14A3CB60251715BC00EBF764 /* UITableViewCellSudokuButtonReverse.swift in Sources */,
+				14A3CB5B25170E7000EBF764 /* UITableViewCellSudokuView.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				14A3CB5C25170E7000EBF764 /* UITableViewCellSudokuButton.swift in Sources */,
 				146050EA23A31FAD00C10F34 /* NSObject+Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

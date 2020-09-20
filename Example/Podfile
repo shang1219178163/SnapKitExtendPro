@@ -4,6 +4,7 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'SnapKitExtendPro_Example' do
+  pod 'SnapKit'
   pod 'SnapKitExtendPro', :path => '../'
 
   # pod 'Alamofire'
@@ -14,9 +15,8 @@ target 'SnapKitExtendPro_Example' do
   # pod 'MBProgressHUD'
   # pod 'MMPopupView'
   # pod 'MJRefresh'
-  # pod 'SnapKit'
   # pod 'SnapKitExtend'
-  # pod 'SwiftExpand'
+   pod 'SwiftExpand'
   # pod 'HandyJSON'
   # pod 'RxCocoa'
   # pod 'RxSwift'

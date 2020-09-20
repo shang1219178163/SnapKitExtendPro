@@ -1,0 +1,29 @@
+PODS:
+  - SnapKit (4.2.0)
+  - SnapKitExtendPro (0.1.0):
+    - SnapKit
+  - SwiftExpand (4.3.0):
+    - SnapKit
+
+DEPENDENCIES:
+  - SnapKit
+  - SnapKitExtendPro (from `../`)
+  - SwiftExpand
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - SnapKit
+    - SwiftExpand
+
+EXTERNAL SOURCES:
+  SnapKitExtendPro:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  SnapKitExtendPro: c49cbbee37ad463bf192a5139340a486424cab66
+  SwiftExpand: 12ccb0a5e700059279d307254ccf1032412f8ef7
+
+PODFILE CHECKSUM: 9508f1db5d8cb82ce1ec51d0c9e2a6d5be277726
+
+COCOAPODS: 1.10.0.beta.2
