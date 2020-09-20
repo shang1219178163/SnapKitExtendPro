@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SnapKitExtendPro'
-  s.version          = '1.0.0.1'
+  s.version          = '1.0.1'
   s.summary          = 'A short description of SnapKitExtendPro.'
   s.description      = 'TODO: Add long description of the pod here.'
 
