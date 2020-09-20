@@ -248,7 +248,7 @@ public struct ConstraintArrayDSL {
     ///   - fixedInteritemSpacing: the Interitem spacing between each item
     ///   - warpCount: the warp count in the super container
     ///   - edgeInset: the padding in the super container
-    public func distributeSudokuViews(fixedLineSpacing: CGFloat, fixedInteritemSpacing: CGFloat, warpCount: Int, edgeInset: ConstraintEdgeInsets = .zero, isReverse: Bool = false) {
+    public func distributeSudokuViews(fixedLineSpacing: CGFloat, fixedInteritemSpacing: CGFloat, warpCount: Int, edgeInset: ConstraintEdgeInsets = .zero) {
         
         guard self.array.count > 1, warpCount >= 1, let tempSuperView = commonSuperviewOfViews() else {
             return
@@ -298,22 +298,12 @@ public struct ConstraintArrayDSL {
                     make.left.equalTo(prev.snp.right).offset(fixedInteritemSpacing);
                 }
                 
-                if isReverse == false {
-                    if currentRow == 0 {
-                        make.top.equalTo(tempSuperView).offset(edgeInset.top);
-                    }
-                    
-                    if currentColumn == 0 {
-                        make.left.equalTo(tempSuperView).offset(edgeInset.left);
-                    }
-                } else {
-                    if currentRow == 0 {
-                        make.top.equalTo(tempSuperView).offset(edgeInset.top);
-                    }
-                    
-                    if currentRow == rowCount - 1 && i == array.count - 1 {
-                        make.right.equalTo(tempSuperView).offset(-edgeInset.right)
-                    }
+                if currentRow == 0 {
+                    make.top.equalTo(tempSuperView).offset(edgeInset.top);
+                }
+                
+                if currentColumn == 0 {
+                    make.left.equalTo(tempSuperView).offset(edgeInset.left);
                 }
             })
             prev = v
