@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapKitExtendPro — SnapKit 数组约束扩展</title>
+  <meta name="description" content="基于 SnapKit 的数组约束扩展：等间距排布、固定尺寸排布、九宫格布局。兼容 CocoaPods 与 Swift Package Manager。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0d0f;
+      --bg-elevated: #14161a;
+      --bg-card: #181b21;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e8eaed;
+      --text-muted: #8b919a;
+      --accent: #f05138;
+      --accent-soft: rgba(240, 81, 56, 0.14);
+      --accent-glow: rgba(240, 81, 56, 0.35);
+      --swift-blue: #5ac8fa;
+      --mono: "IBM Plex Mono", ui-monospace, monospace;
+      --sans: "DM Sans", system-ui, sans-serif;
+      --serif: "Instrument Serif", Georgia, serif;
+      --radius: 14px;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 15% -10%, rgba(240, 81, 56, 0.18), transparent 55%),
+        radial-gradient(ellipse 60% 40% at 90% 20%, rgba(90, 200, 250, 0.08), transparent 50%),
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: auto, auto, 48px 48px, 48px 48px;
+      mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, black 20%, transparent 85%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px 96px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 48px;
+      animation: rise 0.8s var(--ease-out) both;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #ff8a65);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+    .logo-text {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-links .cta {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 500;
+    }
+    .nav-links .cta:hover {
+      background: #ff6347;
+      color: #fff;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 72px;
+    }
+    .hero-copy {
+      animation: rise 0.9s var(--ease-out) 0.1s both;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin-bottom: 32px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pill {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+    }
+    .pill strong { color: var(--swift-blue); font-weight: 500; }
+    .install-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: rise 0.9s var(--ease-out) 0.25s both;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    }
+    .install-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .dots { display: flex; gap: 6px; }
+    .dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .dots span:first-child { background: #ff5f57; }
+    .dots span:nth-child(2) { background: #febc2e; }
+    .dots span:nth-child(3) { background: #28c840; }
+    .install-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .install-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 10px 14px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .install-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+    .install-tab:hover { color: var(--text); }
+    .install-tab.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .install-panel { display: none; }
+    .install-panel.active { display: block; }
+    .install-body {
+      padding: 20px 18px 22px;
+    }
+    .install-body pre {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+      color: #c5cad3;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .install-body .kw { color: #ff7ab2; }
+    .install-body .str { color: #98d982; }
+    .install-body .url { color: var(--swift-blue); }
+    .copy-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .copy-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .copy-btn:active { transform: scale(0.98); }
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+      animation: rise 0.8s var(--ease-out) 0.35s both;
+    }
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 400;
+    }
+    .section-head p {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 420px;
+    }
+    .search-wrap {
+      position: relative;
+      width: min(100%, 320px);
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-wrap input:focus {
+      border-color: rgba(240, 81, 56, 0.5);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 2;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.35s var(--ease-out), border-color 0.25s, box-shadow 0.35s;
+      animation: rise 0.7s var(--ease-out) both;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(240, 81, 56, 0.35);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(240, 81, 56, 0.1);
+    }
+    .card.hidden { display: none; }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .card-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      white-space: nowrap;
+    }
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .snippet {
+      background: #0a0b0d;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      overflow-x: auto;
+    }
+    .snippet code {
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.65;
+      color: #b8bec8;
+      white-space: pre;
+    }
+    .snippet .cm { color: #5c6370; }
+    .snippet .fn { color: #61afef; }
+    .snippet .ty { color: #e5c07b; }
+    .snippet .str { color: #98c379; }
+    .snippet .kw { color: #c678dd; }
+    .footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--text-muted);
+      font-size: 14px;
+      animation: rise 0.8s var(--ease-out) 0.5s both;
+    }
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 36px; }
+      .nav-links a:not(.cta) { display: none; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav">
+      <a class="logo" href="#">
+        <span class="logo-mark">SP</span>
+        <span class="logo-text">SnapKitExtendPro</span>
+      </a>
+      <div class="nav-links">
+        <a href="#api">API</a>
+        <a href="https://github.com/shang1219178163/SnapKitExtendPro/blob/master/README.md" target="_blank" rel="noopener">README</a>
+        <a class="cta" href="https://github.com/shang1219178163/SnapKitExtendPro" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">v1.0.4 · CocoaPods · SPM</div>
+        <h1>数组约束，<em>一行排布</em></h1>
+        <p class="hero-desc">
+          基于 SnapKit 的 <code style="font-family:var(--mono);font-size:15px;color:var(--text);">[UIView].snp</code> 扩展：
+          等间距、固定尺寸、九宫格与反向九宫格，少写重复约束。
+        </p>
+        <div class="hero-meta">
+          <span class="pill"><strong>iOS</strong> 10+</span>
+          <span class="pill"><strong>tvOS</strong> 10+</span>
+          <span class="pill"><strong>macOS</strong> 10.12+</span>
+          <span class="pill">SnapKit <strong>5.x</strong></span>
+          <span class="pill">MIT</span>
+        </div>
+      </div>
+
+      <aside class="install-card">
+        <div class="install-header">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="install-title">Install</span>
+        </div>
+        <div class="install-tabs" role="tablist">
+          <button class="install-tab active" type="button" data-tab="spm" role="tab" aria-selected="true">SPM</button>
+          <button class="install-tab" type="button" data-tab="pods" role="tab" aria-selected="false">CocoaPods</button>
+        </div>
+        <div class="install-body">
+          <div class="install-panel active" id="panel-spm" role="tabpanel">
+            <pre id="spm-code"><span class="kw">dependencies</span>: [
+    .<span class="kw">package</span>(
+        <span class="kw">url</span>: <span class="str">"<span class="url">https://github.com/shang1219178163/SnapKitExtendPro.git</span>"</span>,
+        <span class="kw">from</span>: <span class="str">"1.0.4"</span>
+    )
+]</pre>
+            <button class="copy-btn" type="button" id="copy-spm">复制 SPM 依赖</button>
+          </div>
+          <div class="install-panel" id="panel-pods" role="tabpanel">
+            <pre id="pods-code"><span class="kw">pod</span> <span class="str">'SnapKitExtendPro'</span>, <span class="str">'~> 1.0.4'</span></pre>
+            <button class="copy-btn" type="button" id="copy-pods">复制 Podfile 行</button>
+          </div>
+        </div>
+      </aside>
+    </header>
+
+    <section id="api">
+      <div class="section-head">
+        <div>
+          <h2>API 速览</h2>
+          <p>通过 <code style="font-family:var(--mono);font-size:13px;">views.snp</code> 批量约束。输入关键词可即时筛选。</p>
+        </div>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input type="search" id="search" placeholder="搜索 distribute、sudoku、spacing…" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="grid" id="module-grid">
+        <article class="card" data-keywords="array snp makeConstraints updateConstraints remakeConstraints removeConstraints batch">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(240,81,56,0.15); color: var(--accent);">SN</div>
+            <span class="card-tag">入口</span>
+          </div>
+          <h3>数组约束入口</h3>
+          <p class="card-desc">对 <code style="font-family:var(--mono);font-size:12px;">[ConstraintView]</code> 统一 make / update / remake / remove。</p>
+          <div class="snippet"><code>views.<span class="fn">snp</span>.<span class="fn">makeConstraints</span> { make <span class="kw">in</span>
+    make.height.<span class="fn">equalTo</span>(<span class="str">44</span>)
+}
+views.<span class="fn">snp</span>.<span class="fn">updateConstraints</span> { make <span class="kw">in</span>
+    make.height.<span class="fn">equalTo</span>(<span class="str">56</span>)
+}</code></div>
+        </article>
+
+        <article class="card" data-keywords="distributeViewsAlong fixedSpacing leadSpacing tailSpacing horizontal vertical axis">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(90,200,250,0.12); color: var(--swift-blue);">FX</div>
+            <span class="card-tag">等间距</span>
+          </div>
+          <h3>固定间距排布</h3>
+          <p class="card-desc">沿水平或垂直方向等间距分布，首尾间距可单独指定。</p>
+          <div class="snippet"><code>items.<span class="fn">snp</span>.<span class="fn">distributeViewsAlong</span>(
+    axisType: .<span class="fn">horizontal</span>,
+    fixedSpacing: <span class="str">10</span>,
+    leadSpacing: <span class="str">16</span>,
+    tailSpacing: <span class="str">16</span>
+)</code></div>
+        </article>
+
+        <article class="card" data-keywords="distributeViewsAlong fixedItemLength fixed size width height">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(152,217,130,0.12); color: #98d982;">SZ</div>
+            <span class="card-tag">固定尺寸</span>
+          </div>
+          <h3>固定尺寸排布</h3>
+          <p class="card-desc">每个子视图固定宽/高，在父视图内按比例铺开。</p>
+          <div class="snippet"><code>items.<span class="fn">snp</span>.<span class="fn">distributeViewsAlong</span>(
+    axisType: .<span class="fn">vertical</span>,
+    fixedItemLength: <span class="str">48</span>,
+    leadSpacing: <span class="str">12</span>,
+    tailSpacing: <span class="str">12</span>
+)</code></div>
+        </article>
+
+        <article class="card" data-keywords="distributeSudokuViews fixedLineSpacing fixedInteritemSpacing warpCount edgeInset grid">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(255,183,77,0.12); color: #ffb74d;">SU</div>
+            <span class="card-tag">九宫格</span>
+          </div>
+          <h3>九宫格 · 固定间距</h3>
+          <p class="card-desc">指定行列间距与每行个数，自动铺满父视图（含边距）。</p>
+          <div class="snippet"><code>items.<span class="fn">snp</span>.<span class="fn">distributeSudokuViews</span>(
+    fixedLineSpacing: <span class="str">10</span>,
+    fixedInteritemSpacing: <span class="str">10</span>,
+    warpCount: <span class="str">3</span>,
+    edgeInset: .<span class="fn">init</span>(top: <span class="str">10</span>, left: <span class="str">10</span>,
+                      bottom: <span class="str">10</span>, right: <span class="str">10</span>)
+)</code></div>
+        </article>
+
+        <article class="card" data-keywords="distributeSudokuViews fixedItemWidth fixedItemHeight warpCount edgeInset size">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(198,120,221,0.12); color: #c678dd;">FW</div>
+            <span class="card-tag">九宫格</span>
+          </div>
+          <h3>九宫格 · 固定宽高</h3>
+          <p class="card-desc">每个格子固定宽高，按 warpCount 换行排布。</p>
+          <div class="snippet"><code>items.<span class="fn">snp</span>.<span class="fn">distributeSudokuViews</span>(
+    fixedItemWidth: <span class="str">80</span>,
+    fixedItemHeight: <span class="str">80</span>,
+    warpCount: <span class="str">3</span>,
+    edgeInset: .<span class="fn">zero</span>
+)</code></div>
+        </article>
+
+        <article class="card" data-keywords="distributeSudokuViewsReverse reverse rtl right to left">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(255,255,255,0.06); color: #aaa;">RV</div>
+            <span class="card-tag">反向</span>
+          </div>
+          <h3>反向九宫格</h3>
+          <p class="card-desc">从右向左填充的九宫格，适合 RTL 或特殊视觉顺序。</p>
+          <div class="snippet"><code>items.<span class="fn">snp</span>.<span class="fn">distributeSudokuViewsReverse</span>(
+    fixedLineSpacing: <span class="str">10</span>,
+    fixedInteritemSpacing: <span class="str">10</span>,
+    warpCount: <span class="str">3</span>,
+    edgeInset: .<span class="fn">zero</span>
+)</code></div>
+        </article>
+
+        <article class="card" data-keywords="distributeViewsHorizontal isReverse flexible width centerY">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(90,200,250,0.1); color: var(--swift-blue);">HZ</div>
+            <span class="card-tag">水平流</span>
+          </div>
+          <h3>水平流式排布</h3>
+          <p class="card-desc">水平串联、垂直居中；支持正向 / 反向，子视图宽度自适应内容。</p>
+          <div class="snippet"><code>labels.<span class="fn">snp</span>.<span class="fn">distributeViewsHorizontal</span>(
+    fixedSpacing: <span class="str">8</span>,
+    leadSpacing: <span class="str">16</span>,
+    tailSpacing: <span class="str">16</span>,
+    isReverse: <span class="kw">false</span>
+)</code></div>
+        </article>
+
+        <article class="card" data-keywords="cocoapods spm snapkit install platform ios tvos macos">
+          <div class="card-top">
+            <div class="card-icon" style="background: rgba(240,81,56,0.12); color: var(--accent);">++</div>
+            <span class="card-tag">集成</span>
+          </div>
+          <h3>双包管理器</h3>
+          <p class="card-desc">CocoaPods 与 SPM 共用同一套源码；依赖 SnapKit，iOS / tvOS / macOS。</p>
+          <div class="snippet"><code><span class="cm">// Xcode → Add Packages…</span>
+<span class="str">https://github.com/shang1219178163/SnapKitExtendPro.git</span>
+
+<span class="cm">// Podfile</span>
+<span class="kw">pod</span> <span class="str">'SnapKitExtendPro'</span></code></div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>© SnapKitExtendPro · MIT License</span>
+      <span>完整说明见 <a href="https://github.com/shang1219178163/SnapKitExtendPro/blob/master/README.md" target="_blank" rel="noopener">README.md</a> · <a href="https://github.com/shang1219178163/SnapKitExtendPro/releases/tag/1.0.4" target="_blank" rel="noopener">1.0.4</a></span>
+    </footer>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll(".card");
+    const searchInput = document.getElementById("search");
+    const copySpm = document.getElementById("copy-spm");
+    const copyPods = document.getElementById("copy-pods");
+    const tabs = document.querySelectorAll(".install-tab");
+    const panels = document.querySelectorAll(".install-panel");
+    const spmRaw = `.package(url: "https://github.com/shang1219178163/SnapKitExtendPro.git", from: "1.0.4")`;
+    const podsRaw = `pod 'SnapKitExtendPro', '~> 1.0.4'`;
+    cards.forEach((card, index) => {
+      card.style.animationDelay = `${0.4 + index * 0.08}s`;
+    });
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.trim().toLowerCase();
+      cards.forEach((card) => {
+        const text = (card.textContent + " " + (card.dataset.keywords || "")).toLowerCase();
+        card.classList.toggle("hidden", query.length > 0 && !text.includes(query));
+      });
+    });
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const key = tab.dataset.tab;
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle("active", active);
+          t.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        panels.forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `panel-${key}`);
+        });
+      });
+    });
+    async function copyText(btn, text, idleLabel) {
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "已复制 ✓";
+        setTimeout(() => { btn.textContent = idleLabel; }, 2000);
+      } catch {
+        btn.textContent = "请手动复制";
+      }
+    }
+    copySpm.addEventListener("click", () => copyText(copySpm, spmRaw, "复制 SPM 依赖"));
+    copyPods.addEventListener("click", () => copyText(copyPods, podsRaw, "复制 Podfile 行"));
+  </script>
+</body>
+</html>
